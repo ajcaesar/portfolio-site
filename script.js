@@ -17,7 +17,7 @@ class Ball {
         this.radius = radius;
         this.dx = dx;
         this.dy = dy;
-        this.mass = radius; // Assume mass is proportional to radius
+        this.mass = radius;
         this.color = color;
     }
 
@@ -115,7 +115,7 @@ function addBall() {
     let dx = (Math.random() - 0.5) * 4;
     let dy = (Math.random() - 0.5) * 4;
 
-    balls.push(new Ball(x, y, radius, dx, dy));
+    balls.push(new Ball(x, y, radius, dx*speedMultiplier, dy*speedMultiplier));
 }
 
 function removeBall() {
