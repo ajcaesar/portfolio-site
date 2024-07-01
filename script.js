@@ -4,13 +4,14 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 const colors = document.getElementById("colors")
+let allColor = "blue";
 
 let balls = [];
 const ballCount = 30;
 let speedMultiplier = 1;
 
 class Ball {
-    constructor(x, y, radius, dx, dy, color="blue") {
+    constructor(x, y, radius, dx, dy, color=allColor) {
         this.x = x;
         this.y = y;
         this.radius = radius;
@@ -168,6 +169,7 @@ colors.addEventListener("click", () => {
     for (let ball of balls) {
         ball.color = col;
     }
+    allColor = col;
 });
 
 init();
