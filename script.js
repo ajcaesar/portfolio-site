@@ -18,6 +18,7 @@ const decreaseStringButton = document.getElementById("decreaseStringButton");
 const increaseGravityButton = document.getElementById("increaseGravityButton");
 const decreaseGravityButton = document.getElementById("decreaseGravityButton");
 const resetButton = document.getElementById("resetButton");
+const message = document.getElementById("message");
 
 let allColor = "blue";
 let isPlaying = true;
@@ -177,6 +178,7 @@ playButton.addEventListener("click", () => {
         lastTime = performance.now();
         animate(lastTime);
     }
+    message.style.display = "none";
 });
 
 increaseBallButton.addEventListener("click", () => {
@@ -212,6 +214,7 @@ decreaseGravityButton.addEventListener("click", () => {
 
 resetButton.addEventListener("click", () => {
     resetBalls();
+    message.style.display = "block";
     isPlaying = false;
     playButton.textContent = "Play";
     if (animationId) {
