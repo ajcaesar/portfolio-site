@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJ Caesar's Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="name-box">
+        <div class="name">Albert (AJ) Caesar</div>
+        <div class="links">
+            <a href="https://www.linkedin.com/in/aj-caesar/" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a> | 
+            <a href="https://github.com/ajcaesar" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+        </div>
+    </div>
+    <div class="content">
+        <div class="column" id="technical-projects">
+            <h2>Technical Projects</h2>
+            <button class="fullscreen-button"><i class="fas fa-expand"></i></button>
+            <button class="minimize-button" style="display: none;"><i class="fas fa-compress"></i></button>
+            <!-- Add your technical projects content here -->
+        </div>
+        <div class="column" id="investment-blog">
+            <h2>Investment Blog</h2>
+            <button class="fullscreen-button"><i class="fas fa-expand"></i></button>
+            <button class="minimize-button" style="display: none;"><i class="fas fa-compress"></i></button>
+            <!-- Add your investment blog content here -->
+        </div>
+    </div>
+    <div class="controls">
+        <button id="resetButton">Reset</button>
+        <button id="playButton">Play</button>
+        <div class="control-group">
+            <button id="addBallButton">Add Ball</button>
+        </div>
+        <div class="control-group">
+            <button id="decreaseStringButton">-</button>
+            <span>String Length</span>
+            <button id="increaseStringButton">+</button>
+        </div>
+        <div class="control-group">
+            <button id="decreaseGravityButton">-</button>
+            <span>Gravity</span>
+            <button id="increaseGravityButton">+</button>
+        </div>
+        <button id="colors">Change Colors</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
