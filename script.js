@@ -20,24 +20,26 @@ const decreaseGravityButton = document.getElementById("decreaseGravityButton");
 const resetButton = document.getElementById("resetButton");
 
 let allColor = "blue";
-let isPlaying = false;
+let isPlaying = true;
 let draggedBall = null;
 let dragStartAngle = 0;
 const balls = [];
 const radius = 20;
-let stringLength = 200;
-let gravity = 100; // m/s^2
-const damping = 1; // Slight damping for realism
+let stringLength = 230;
+let gravity = 250;
+const damping = 1;
 
 function resetBalls() {
     const startX = canvas.width / 2 - (balls.length * radius * 2) / 2;
-    const topY = 120; // Align with the top of the Newton's Cradle
+    const topY = 120;
     balls.forEach((ball, index) => {
         ball.x = startX + index * (radius * 2);
         ball.y = topY;
         ball.angle = 0;
         ball.angularVelocity = 0;
     });
+    balls[0].angle = -70 * (Math.PI / 180);
+    balls[1].angle = -70 * (Math.PI / 180);
     draw();
 }
 
@@ -47,7 +49,7 @@ function createBall(x, y, radius) {
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const topY = 120; // Align with the top of the Newton's Cradle
+    const topY = 120;
     ctx.beginPath();
     ctx.moveTo(0, topY);
     ctx.lineTo(canvas.width, topY);
@@ -80,22 +82,10 @@ function draw() {
 }
 
 function updateContentPosition() {
-    const topY = 120; // Align with the top of the Newton's Cradle
+    const topY = 120;
     const contentDiv = document.querySelector('.content');
     contentDiv.style.marginTop = `${topY + stringLength + 30}px`;
 }
-
-increaseStringButton.addEventListener("click", () => {
-    stringLength += 10;
-    draw();
-    updateContentPosition();
-});
-
-decreaseStringButton.addEventListener("click", () => {
-    stringLength = Math.max(50, stringLength - 10);
-    draw();
-    updateContentPosition();
-});
 
 function update(dt) {
     if (isPlaying) {
@@ -104,8 +94,6 @@ function update(dt) {
             ball.angularVelocity += tangentialAcceleration * dt;
             ball.angularVelocity *= damping;
             ball.angle += ball.angularVelocity * dt;
-            const maxAngle = Math.PI / 2 - 0.1;
-            ball.angle = Math.max(-maxAngle, Math.min(maxAngle, ball.angle));
         });
 
         for (let i = 0; i < balls.length - 1; i++) {
@@ -120,7 +108,14 @@ function update(dt) {
             const distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < 2 * radius) {
+                const overlap = 2 * radius - distance;
                 const totalMass = ball1.mass + ball2.mass;
+                const ball1Adjustment = overlap * (ball2.mass / totalMass);
+                const ball2Adjustment = overlap * (ball1.mass / totalMass);
+
+                ball1.angle -= ball1Adjustment / stringLength;
+                ball2.angle += ball2Adjustment / stringLength;
+
                 const newVel1 = (ball1.angularVelocity * (ball1.mass - ball2.mass) + 2 * ball2.mass * ball2.angularVelocity) / totalMass;
                 const newVel2 = (ball2.angularVelocity * (ball2.mass - ball1.mass) + 2 * ball1.mass * ball1.angularVelocity) / totalMass;
                 ball1.angularVelocity = newVel1;
@@ -162,26 +157,7 @@ canvas.addEventListener('mousemove', (event) => {
     const dx = event.clientX - draggedBall.x;
     const dy = event.clientY - draggedBall.y;
     const newAngle = Math.atan2(dx, dy);
-    const maxAngle = Math.PI / 2 - 0.1;
-    const clampedAngle = Math.max(-maxAngle, Math.min(maxAngle, newAngle));
-    draggedBall.angle = clampedAngle;
-
-    const index = balls.indexOf(draggedBall);
-    if (clampedAngle > 0) {
-        for (let i = index + 1; i < balls.length; i++) {
-            balls[i].angle = clampedAngle;
-        }
-        for (let i = 0; i < index; i++) {
-            balls[i].angle = 0;
-        }
-    } else {
-        for (let i = 0; i < index; i++) {
-            balls[i].angle = clampedAngle;
-        }
-        for (let i = index + 1; i < balls.length; i++) {
-            balls[i].angle = 0;
-        }
-    }
+    draggedBall.angle = newAngle;
     draw();
 });
 
@@ -204,7 +180,7 @@ playButton.addEventListener("click", () => {
 });
 
 increaseBallButton.addEventListener("click", () => {
-    const topY = 120; // Align with the top of the Newton's Cradle
+    const topY = 120;
     balls.push(createBall(canvas.width / 2, topY, radius));
     resetBalls();
 });
@@ -227,11 +203,11 @@ decreaseStringButton.addEventListener("click", () => {
 });
 
 increaseGravityButton.addEventListener("click", () => {
-    gravity += 10;
+    gravity += 1;
 });
 
 decreaseGravityButton.addEventListener("click", () => {
-    gravity = Math.max(0, gravity - 10);
+    gravity = Math.max(0, gravity - 1);
 });
 
 resetButton.addEventListener("click", () => {
@@ -252,7 +228,7 @@ function getRandomColor() {
 }
 
 function initialize() {
-    const topY = 120; // Align with the top of the Newton's Cradle
+    const topY = 120;
     for (let i = 0; i < 5; i++) {
         balls.push(createBall(canvas.width / 2, topY, radius));
     }
