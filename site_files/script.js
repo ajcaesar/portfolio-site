@@ -11,7 +11,8 @@ resizeCanvas();
 
 const colors = document.getElementById("colors");
 const playButton = document.getElementById("playButton");
-const addBallButton = document.getElementById("addBallButton");
+const increaseBallButton = document.getElementById("increaseBallButton");
+const decreaseBallButton = document.getElementById("decreaseBallButton");
 const increaseStringButton = document.getElementById("increaseStringButton");
 const decreaseStringButton = document.getElementById("decreaseStringButton");
 const increaseGravityButton = document.getElementById("increaseGravityButton");
@@ -22,7 +23,6 @@ let allColor = "blue";
 let isPlaying = false;
 let draggedBall = null;
 let dragStartAngle = 0;
-
 const balls = [];
 const radius = 20;
 let stringLength = 200;
@@ -31,15 +31,14 @@ const damping = 1; // Slight damping for realism
 
 function resetBalls() {
     const startX = canvas.width / 2 - (balls.length * radius * 2) / 2;
-    const topY = canvas.height / 2 - 200; // Fixed top position
-
+    const topY = 120; // Align with the top of the Newton's Cradle
     balls.forEach((ball, index) => {
         ball.x = startX + index * (radius * 2);
         ball.y = topY;
         ball.angle = 0;
         ball.angularVelocity = 0;
     });
-    draw(); // Immediately redraw to show reset state
+    draw();
 }
 
 function createBall(x, y, radius) {
@@ -48,8 +47,7 @@ function createBall(x, y, radius) {
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    const topY = canvas.height / 2 - 200; // Fixed top position
+    const topY = 120; // Align with the top of the Newton's Cradle
     ctx.beginPath();
     ctx.moveTo(0, topY);
     ctx.lineTo(canvas.width, topY);
@@ -78,7 +76,26 @@ function draw() {
         ctx.fill();
         ctx.stroke();
     });
+    updateContentPosition();
 }
+
+function updateContentPosition() {
+    const topY = 120; // Align with the top of the Newton's Cradle
+    const contentDiv = document.querySelector('.content');
+    contentDiv.style.marginTop = `${topY + stringLength + 30}px`;
+}
+
+increaseStringButton.addEventListener("click", () => {
+    stringLength += 10;
+    draw();
+    updateContentPosition();
+});
+
+decreaseStringButton.addEventListener("click", () => {
+    stringLength = Math.max(50, stringLength - 10);
+    draw();
+    updateContentPosition();
+});
 
 function update(dt) {
     if (isPlaying) {
@@ -87,32 +104,25 @@ function update(dt) {
             ball.angularVelocity += tangentialAcceleration * dt;
             ball.angularVelocity *= damping;
             ball.angle += ball.angularVelocity * dt;
-
-            // Clamp the angle to prevent balls from swinging too far
             const maxAngle = Math.PI / 2 - 0.1;
             ball.angle = Math.max(-maxAngle, Math.min(maxAngle, ball.angle));
         });
 
-        // Collision detection and momentum transfer
         for (let i = 0; i < balls.length - 1; i++) {
             const ball1 = balls[i];
             const ball2 = balls[i + 1];
-            
             const x1 = ball1.x + Math.sin(ball1.angle) * stringLength;
             const y1 = ball1.y + Math.cos(ball1.angle) * stringLength;
             const x2 = ball2.x + Math.sin(ball2.angle) * stringLength;
             const y2 = ball2.y + Math.cos(ball2.angle) * stringLength;
-            
             const dx = x2 - x1;
             const dy = y2 - y1;
             const distance = Math.sqrt(dx * dx + dy * dy);
-            
+
             if (distance < 2 * radius) {
-                // Transfer angular velocity based on mass and velocity
                 const totalMass = ball1.mass + ball2.mass;
                 const newVel1 = (ball1.angularVelocity * (ball1.mass - ball2.mass) + 2 * ball2.mass * ball2.angularVelocity) / totalMass;
                 const newVel2 = (ball2.angularVelocity * (ball2.mass - ball1.mass) + 2 * ball1.mass * ball1.angularVelocity) / totalMass;
-
                 ball1.angularVelocity = newVel1;
                 ball2.angularVelocity = newVel2;
             }
@@ -126,7 +136,6 @@ let animationId = null;
 function animate(currentTime) {
     const dt = (currentTime - lastTime) / 1000;
     lastTime = currentTime;
-
     update(dt);
     draw();
     animationId = requestAnimationFrame(animate);
@@ -135,14 +144,12 @@ function animate(currentTime) {
 canvas.addEventListener('mousedown', (event) => {
     const mouseX = event.clientX;
     const mouseY = event.clientY;
-
     balls.forEach(ball => {
         const ballX = ball.x + Math.sin(ball.angle) * stringLength;
         const ballY = ball.y + Math.cos(ball.angle) * stringLength;
         const dx = mouseX - ballX;
         const dy = mouseY - ballY;
         const distance = Math.sqrt(dx * dx + dy * dy);
-
         if (distance < ball.radius) {
             draggedBall = ball;
             dragStartAngle = ball.angle;
@@ -152,26 +159,22 @@ canvas.addEventListener('mousedown', (event) => {
 
 canvas.addEventListener('mousemove', (event) => {
     if (!draggedBall) return;
-
     const dx = event.clientX - draggedBall.x;
     const dy = event.clientY - draggedBall.y;
     const newAngle = Math.atan2(dx, dy);
-
     const maxAngle = Math.PI / 2 - 0.1;
     const clampedAngle = Math.max(-maxAngle, Math.min(maxAngle, newAngle));
-    
     draggedBall.angle = clampedAngle;
 
-    // Update other balls
     const index = balls.indexOf(draggedBall);
-    if (clampedAngle > 0) {  // Ball is moved to the right
+    if (clampedAngle > 0) {
         for (let i = index + 1; i < balls.length; i++) {
             balls[i].angle = clampedAngle;
         }
         for (let i = 0; i < index; i++) {
             balls[i].angle = 0;
         }
-    } else {  // Ball is moved to the left or straight up
+    } else {
         for (let i = 0; i < index; i++) {
             balls[i].angle = clampedAngle;
         }
@@ -179,7 +182,7 @@ canvas.addEventListener('mousemove', (event) => {
             balls[i].angle = 0;
         }
     }
-    draw(); // Redraw while dragging
+    draw();
 });
 
 canvas.addEventListener('mouseup', () => {
@@ -188,7 +191,7 @@ canvas.addEventListener('mouseup', () => {
 
 colors.addEventListener("click", () => {
     allColor = getRandomColor();
-    draw(); // Redraw to show new color
+    draw();
 });
 
 playButton.addEventListener("click", () => {
@@ -200,10 +203,17 @@ playButton.addEventListener("click", () => {
     }
 });
 
-addBallButton.addEventListener("click", () => {
-    const topY = canvas.height / 2 - 200; // Fixed top position
+increaseBallButton.addEventListener("click", () => {
+    const topY = 120; // Align with the top of the Newton's Cradle
     balls.push(createBall(canvas.width / 2, topY, radius));
     resetBalls();
+});
+
+decreaseBallButton.addEventListener("click", () => {
+    if (balls.length > 0) {
+        balls.pop();
+        resetBalls();
+    }
 });
 
 increaseStringButton.addEventListener("click", () => {
@@ -242,7 +252,7 @@ function getRandomColor() {
 }
 
 function initialize() {
-    const topY = canvas.height / 2 - 200; // Fixed top position
+    const topY = 120; // Align with the top of the Newton's Cradle
     for (let i = 0; i < 5; i++) {
         balls.push(createBall(canvas.width / 2, topY, radius));
     }
@@ -252,21 +262,20 @@ function initialize() {
 
 initialize();
 
-// ... (keep the existing JavaScript) ...
-
 document.querySelectorAll('.fullscreen-button').forEach(button => {
     button.addEventListener('click', (e) => {
         const column = e.target.closest('.column');
         column.classList.add('expanded');
         column.querySelector('.fullscreen-button').style.display = 'none';
         column.querySelector('.minimize-button').style.display = 'block';
-        
-        // Hide other columns
+        document.body.classList.add('expanded-column');
         document.querySelectorAll('.column').forEach(col => {
             if (col !== column) {
                 col.style.display = 'none';
             }
         });
+        document.querySelector('.name-box').style.zIndex = '0';
+        document.querySelector('.controls').style.zIndex = '0';
     });
 });
 
@@ -276,10 +285,11 @@ document.querySelectorAll('.minimize-button').forEach(button => {
         column.classList.remove('expanded');
         column.querySelector('.fullscreen-button').style.display = 'block';
         column.querySelector('.minimize-button').style.display = 'none';
-        
-        // Show other columns
+        document.body.classList.remove('expanded-column');
         document.querySelectorAll('.column').forEach(col => {
             col.style.display = 'block';
         });
+        document.querySelector('.name-box').style.zIndex = '10';
+        document.querySelector('.controls').style.zIndex = '10';
     });
 });
