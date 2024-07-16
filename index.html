@@ -3,26 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bouncing Balls Background</title>
+    <title>AJ Caesar's Portfolio</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <canvas id="canvas"></canvas>
+    <div class="name-box">
+        <div class="name">AJ Caesar</div>
+        <div class="links">
+            <a href="https://www.linkedin.com/in/aj-caesar/" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a> 
+            <a href="https://github.com/ajcaesar" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+        </div>
+    </div>
+    <div class="content">
+        <div class="column">
+            <h2>Technical Projects</h2>
+            <div id="technical-projects">
+                <!-- Add your technical projects here -->
+            </div>
+        </div>
+        <div class="column">
+            <h2>Investment Ideas</h2>
+            <div id="investment-ideas">
+                <!-- Add your investment ideas here -->
+            </div>
+        </div>
+    </div>
     <div class="controls">
         <div class="control-group">
-            <div class="triangle-up" id="addBall"></div>
+            <button id="addBall" class="control-button">+</button>
             <span>balls</span>
-            <div class="triangle-down" id="removeBall"></div>
+            <button id="removeBall" class="control-button">-</button>
         </div>
         <div class="control-group">
-            <div class="triangle-up" id="increaseSpeed"></div>
+            <button id="increaseSpeed" class="control-button">+</button>
             <span>speed</span>
-            <div class="triangle-down" id="decreaseSpeed"></div>
+            <button id="decreaseSpeed" class="control-button">-</button>
         </div>
-        <button id="colors">colors</button>
-    </div>
-    <div class="name-box">
-        AJ Caesar
+        <button id="colors">Change Colors</button>
     </div>
     <script src="script.js"></script>
 </body>
