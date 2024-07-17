@@ -1,37 +1,27 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
-function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
-
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
-
-const colors = document.getElementById("colors");
-const playButton = document.getElementById("playButton");
-const increaseBallButton = document.getElementById("increaseBallButton");
-const decreaseBallButton = document.getElementById("decreaseBallButton");
-const increaseStringButton = document.getElementById("increaseStringButton");
-const decreaseStringButton = document.getElementById("decreaseStringButton");
-const increaseGravityButton = document.getElementById("increaseGravityButton");
-const decreaseGravityButton = document.getElementById("decreaseGravityButton");
-const resetButton = document.getElementById("resetButton");
-const message = document.getElementById("message");
-
 let allColor = "blue";
 let isPlaying = true;
 let draggedBall = null;
 let dragStartAngle = 0;
 const balls = [];
 const radius = 20;
-let stringLength = 230;
-let gravity = 250;
+let stringLength = 250;
+let gravity = 280;
 const damping = 1;
 
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    resetBalls(); // Ensure balls are repositioned when the canvas is resized
+}
+
+window.addEventListener('resize', resizeCanvas);
+
 function resetBalls() {
-    const startX = canvas.width / 2 - (balls.length * radius * 2) / 2;
+    if (balls.length === 0) return; // Ensure there are balls to reset
+    const startX = canvas.width / 2 - (balls.length * radius * 2) / 2 + radius; // Center balls horizontally
     const topY = 120;
     balls.forEach((ball, index) => {
         ball.x = startX + index * (radius * 2);
@@ -39,8 +29,10 @@ function resetBalls() {
         ball.angle = 0;
         ball.angularVelocity = 0;
     });
-    balls[0].angle = -70 * (Math.PI / 180);
-    balls[1].angle = -70 * (Math.PI / 180);
+    if (balls.length > 0) {
+        balls[0].angle = -70 * (Math.PI / 180);
+        balls[1].angle = -70 * (Math.PI / 180);
+    }
     draw();
 }
 
@@ -86,6 +78,9 @@ function updateContentPosition() {
     const topY = 120;
     const contentDiv = document.querySelector('.content');
     contentDiv.style.marginTop = `${topY + stringLength + 30}px`;
+
+    const contentHeight = contentDiv.getBoundingClientRect().height;
+    document.body.style.height = `${contentHeight + 20}px`; // Set the body height to content height plus 20px
 }
 
 function update(dt) {
@@ -97,9 +92,15 @@ function update(dt) {
             ball.angle += ball.angularVelocity * dt;
         });
 
-        for (let i = 0; i < balls.length - 1; i++) {
+        handleCollisions();
+    }
+}
+
+function handleCollisions() {
+    for (let i = 0; i < balls.length - 1; i++) {
+        for (let j = i + 1; j < balls.length; j++) {
             const ball1 = balls[i];
-            const ball2 = balls[i + 1];
+            const ball2 = balls[j];
             const x1 = ball1.x + Math.sin(ball1.angle) * stringLength;
             const y1 = ball1.y + Math.cos(ball1.angle) * stringLength;
             const x2 = ball2.x + Math.sin(ball2.angle) * stringLength;
@@ -157,8 +158,14 @@ canvas.addEventListener('mousemove', (event) => {
     if (!draggedBall) return;
     const dx = event.clientX - draggedBall.x;
     const dy = event.clientY - draggedBall.y;
-    const newAngle = Math.atan2(dx, dy);
+    let newAngle = Math.atan2(dx, dy);
+    // Limit angle to 170 degrees
+    const maxAngle = 170 * (Math.PI / 180);
+    newAngle = Math.min(Math.max(newAngle, -maxAngle), maxAngle);
     draggedBall.angle = newAngle;
+
+    handleCollisions(); // Check for collisions while dragging
+
     draw();
 });
 
@@ -205,11 +212,11 @@ decreaseStringButton.addEventListener("click", () => {
 });
 
 increaseGravityButton.addEventListener("click", () => {
-    gravity += 1;
+    gravity += 100;
 });
 
 decreaseGravityButton.addEventListener("click", () => {
-    gravity = Math.max(0, gravity - 1);
+    gravity = Math.max(0, gravity - 100);
 });
 
 resetButton.addEventListener("click", () => {
@@ -238,6 +245,18 @@ function initialize() {
     resetBalls();
     animate(performance.now());
 }
+
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        isPlaying = false;
+        playButton.textContent = "Play";
+    } else {
+        isPlaying = true;
+        playButton.textContent = "Pause";
+        lastTime = performance.now();
+        animate(lastTime);
+    }
+});
 
 initialize();
 
@@ -272,3 +291,18 @@ document.querySelectorAll('.minimize-button').forEach(button => {
         document.querySelector('.controls').style.zIndex = '10';
     });
 });
+
+function updateMessagePosition() {
+    const controls = document.querySelector('.controls');
+    const message = document.getElementById('message');
+    if (controls && message) {
+        const controlsRect = controls.getBoundingClientRect();
+        message.style.width = `${controlsRect.width}px`;
+    }
+}
+
+window.addEventListener('resize', updateMessagePosition);
+updateMessagePosition(); // Initial call to set the position
+
+
+resizeCanvas();
