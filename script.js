@@ -259,21 +259,22 @@ document.addEventListener("visibilitychange", () => {
 });
 
 initialize();
-
 document.querySelectorAll('.fullscreen-button').forEach(button => {
     button.addEventListener('click', (e) => {
         const column = e.target.closest('.column');
-        column.classList.add('expanded');
-        column.querySelector('.fullscreen-button').style.display = 'none';
-        column.querySelector('.minimize-button').style.display = 'block';
-        document.body.classList.add('expanded-column');
-        document.querySelectorAll('.column').forEach(col => {
-            if (col !== column) {
-                col.style.display = 'none';
-            }
-        });
-        document.querySelector('.name-box').style.zIndex = '0';
-        document.querySelector('.controls').style.zIndex = '0';
+        if (column.id === 'technical-projects') {
+            column.classList.add('expanded');
+            column.querySelector('.fullscreen-button').style.display = 'none';
+            column.querySelector('.minimize-button').style.display = 'block';
+            document.body.classList.add('expanded-column');
+            document.querySelectorAll('.column').forEach(col => {
+                if (col !== column) {
+                    col.style.display = 'none';
+                }
+            });
+            document.querySelector('.name-box').style.zIndex = '0';
+            document.querySelector('.controls').style.zIndex = '0';
+        }
     });
 });
 
@@ -291,6 +292,8 @@ document.querySelectorAll('.minimize-button').forEach(button => {
         document.querySelector('.controls').style.zIndex = '10';
     });
 });
+
+
 
 function updateMessagePosition() {
     const controls = document.querySelector('.controls');

@@ -243,3 +243,59 @@ button:hover {
         width: 80px;
     }
 }
+
+.project {
+    margin-top: 20px;
+    background: rgba(211, 211, 211, 0.7); /* Light gray */
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.project h3 {
+    font-size: 20px;
+    color: #1a1a1a; /* Darker text for the title */
+    margin-bottom: 10px;
+}
+
+.project p a {
+    color: #2980b9;
+    text-decoration: none;
+    font-size: 20px; /* Increase font size */
+    font-weight: bold; 
+}
+
+.project p a:hover {
+    text-decoration: underline;
+}
+
+.project p {
+    font-size: 16px; /* Font size for the description */
+    color: #333; /* Darker gray for the text */
+    line-height: 1.5; /* Line height for better readability */
+    margin-bottom: 10px; /* Space between paragraphs */
+}
+
+/* CSS Adjustments */
+.projects-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.expanded h2 {
+    margin-left: 20px;
+}
+
+.column.expanded .projects-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; /* Allow wrapping for responsiveness */
+    gap: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.column.expanded .projects-container .project {
+    width: 43%; /* Each project takes up almost half the width */
+    margin: 1%; /* Small margin for spacing */
+}
+
