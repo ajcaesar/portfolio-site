@@ -1,2 +1,2 @@
 # portfolio-site
-in progress
+https://ajcaesar.github.io/portfolio-site/
