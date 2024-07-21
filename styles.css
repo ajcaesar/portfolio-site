@@ -198,6 +198,10 @@ button:hover {
         width: 60%;
     }
 
+    .column.expanded {
+        width: auto
+    }
+
     .column.expanded .projects-container {
         grid-template-columns: 1fr; /* Single column for narrower viewports */
     }
