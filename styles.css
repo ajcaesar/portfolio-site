@@ -197,6 +197,10 @@ button:hover {
     .column {
         width: 60%;
     }
+
+    .column.expanded .projects-container {
+        grid-template-columns: 1fr; /* Single column for narrower viewports */
+    }
 }
 
 @media (max-width: 768px) {
@@ -212,6 +216,10 @@ button:hover {
 
     .column {
         width: 80%;
+    }
+
+    .column.expanded .projects-container {
+        grid-template-columns: 1fr; /* Single column for narrower viewports */
     }
 }
 
@@ -241,6 +249,10 @@ button:hover {
     .control-group span {
         font-size: 12px;
         width: 80px;
+    }
+
+    .column.expanded .projects-container {
+        grid-template-columns: 1fr; /* Single column for narrower viewports */
     }
 }
 
@@ -286,16 +298,16 @@ button:hover {
 }
 
 .column.expanded .projects-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap; /* Allow wrapping for responsiveness */
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns */
+    gap: 20px; /* 20px gap between items */
     padding: 20px;
     box-sizing: border-box;
 }
 
 .column.expanded .projects-container .project {
-    width: 43%; /* Each project takes up almost half the width */
-    margin: 1%; /* Small margin for spacing */
+    background: rgba(211, 211, 211, 0.7); /* Light gray */
+    border-radius: 8px;
+    padding: 20px;
+    box-sizing: border-box;
 }
-
