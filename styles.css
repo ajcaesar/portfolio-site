@@ -323,3 +323,21 @@ button:hover {
 }
 
 
+.video-wrapper {
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.video-wrapper video {
+    max-width: 100%;
+    height: auto;
+    max-height: 600px;
+    object-fit: contain;
+}
+
+details {
+    margin-top: 10px;
+}
