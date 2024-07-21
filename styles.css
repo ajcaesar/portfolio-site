@@ -315,3 +315,11 @@ button:hover {
     padding: 20px;
     box-sizing: border-box;
 }
+
+@media (max-width: 900px) {
+    .column.expanded .projects-container {
+        grid-template-columns: repeat(1, 1fr);
+}
+}
+
+
