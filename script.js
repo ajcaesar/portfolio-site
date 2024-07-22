@@ -325,11 +325,11 @@ async function updateStockPrice() {
         const returnPercentage = ((currentPrice - previousPrice) / previousPrice) * 100;
         const returnElement = document.getElementById('bkng-return');
         if (returnPercentage >= 0) {
-            returnElement.textContent = ` ${returnPercentage.toFixed(2)}%`;
+            returnElement.textContent = `${returnPercentage.toFixed(2)}%`;
             returnElement.style.color = 'green';
         }
         else {
-            returnElement.textContent = ` (${returnPercentage.toFixed(2)})%`;
+            returnElement.textContent = `(${returnPercentage.toFixed(2)})%`;
             returnElement.style.color = 'red';
         }
     } else {
