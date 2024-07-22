@@ -1,219 +1,311 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
+let allColor = "blue";
+let isPlaying = true;
+let draggedBall = null;
+let dragStartAngle = 0;
+const balls = [];
+const radius = 20;
+let stringLength = 250;
+let gravity = 280;
+const damping = 1;
+
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    resetBalls(); // Ensure balls are repositioned when the canvas is resized
 }
 
 window.addEventListener('resize', resizeCanvas);
-window.addEventListener('scroll', resizeCanvas);
-resizeCanvas();
 
-const colors = document.getElementById("colors");
-let allColor = "blue";
-
-let balls = [];
-const ballCount = 30;
-let speedMultiplier = 1;
-let time = 0;
-
-class Ball {
-    constructor(x, y, radius, color = allColor, delay = 0) {
-        this.x = x;
-        this.y = y;
-        this.radius = radius;
-        this.color = color;
-        this.angle = 0;
-        this.distance = 0;
-        this.dx = 0;
-        this.dy = 0;
-        this.initialSpiral = true;
-        this.delay = delay;
-        this.startTime = null;
-        this.spiralSpeed = 2.5; // Increased speed for the initial spiral
-        this.spiralDuration = Math.random() * 2000 + 1000; // Random duration between 1-3 seconds
+function resetBalls() {
+    if (balls.length === 0) return; // Ensure there are balls to reset
+    const startX = canvas.width / 2 - (balls.length * radius * 2) / 2 + radius; // Center balls horizontally
+    const topY = 120;
+    balls.forEach((ball, index) => {
+        ball.x = startX + index * (radius * 2);
+        ball.y = topY;
+        ball.angle = 0;
+        ball.angularVelocity = 0;
+    });
+    if (balls.length > 0) {
+        balls[0].angle = -70 * (Math.PI / 180);
+        balls[1].angle = -70 * (Math.PI / 180);
     }
+    draw();
+}
 
-    draw() {
-        const gradient = ctx.createRadialGradient(this.x - this.radius / 4, this.y - this.radius / 4, this.radius / 8, this.x, this.y, this.radius);
-        gradient.addColorStop(0, '#ffffff');
-        gradient.addColorStop(1, this.color);
+function createBall(x, y, radius) {
+    return { x, y, angle: 0, angularVelocity: 0, radius, mass: 1 };
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const topY = 120;
+    ctx.beginPath();
+    ctx.moveTo(0, topY);
+    ctx.lineTo(canvas.width, topY);
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 4;
+    ctx.stroke();
+
+    balls.forEach(ball => {
+        const ballX = ball.x + Math.sin(ball.angle) * stringLength;
+        const ballY = ball.y + Math.cos(ball.angle) * stringLength;
 
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+        ctx.moveTo(ball.x, ball.y);
+        ctx.lineTo(ballX, ballY);
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        const gradient = ctx.createRadialGradient(ballX - ball.radius / 4, ballY - ball.radius / 4, ball.radius / 8, ballX, ballY, ball.radius);
+        gradient.addColorStop(0, '#ffffff');
+        gradient.addColorStop(1, allColor);
+
+        ctx.beginPath();
+        ctx.arc(ballX, ballY, ball.radius, 0, Math.PI * 2);
         ctx.fillStyle = gradient;
         ctx.fill();
-        ctx.closePath();
+        // ctx.stroke();
+    });
+    updateContentPosition();
+}
 
-        this.drawShadow();
+function updateContentPosition() {
+    const topY = 120;
+    const contentDiv = document.querySelector('.content');
+    contentDiv.style.marginTop = `${topY + stringLength + 30}px`;
+
+    const contentHeight = contentDiv.getBoundingClientRect().height;
+    document.body.style.height = `${contentHeight + 20}px`; // Set the body height to content height plus 20px
+}
+
+function update(dt) {
+    if (isPlaying) {
+        balls.forEach(ball => {
+            const tangentialAcceleration = -gravity / stringLength * Math.sin(ball.angle);
+            ball.angularVelocity += tangentialAcceleration * dt;
+            ball.angularVelocity *= damping;
+            ball.angle += ball.angularVelocity * dt;
+        });
+
+        handleCollisions();
     }
+}
 
-    drawShadow() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
-        ctx.shadowBlur = 15;
-        ctx.shadowOffsetX = 10;
-        ctx.shadowOffsetY = 10;
-        ctx.fill();
-        ctx.closePath();
-    }
+function handleCollisions() {
+    for (let i = 0; i < balls.length - 1; i++) {
+        for (let j = i + 1; j < balls.length; j++) {
+            const ball1 = balls[i];
+            const ball2 = balls[j];
+            const x1 = ball1.x + Math.sin(ball1.angle) * stringLength;
+            const y1 = ball1.y + Math.cos(ball1.angle) * stringLength;
+            const x2 = ball2.x + Math.sin(ball2.angle) * stringLength;
+            const y2 = ball2.y + Math.cos(ball2.angle) * stringLength;
+            const dx = x2 - x1;
+            const dy = y2 - y1;
+            const distance = Math.sqrt(dx * dx + dy * dy);
 
-    update(currentTime) {
-        if (!this.startTime) {
-            this.startTime = currentTime;
-        }
+            if (distance < 2 * radius) {
+                const overlap = 2 * radius - distance;
+                const totalMass = ball1.mass + ball2.mass;
+                const ball1Adjustment = overlap * (ball2.mass / totalMass);
+                const ball2Adjustment = overlap * (ball1.mass / totalMass);
 
-        if (currentTime - this.startTime < this.delay) {
-            return;
-        }
+                ball1.angle -= ball1Adjustment / stringLength;
+                ball2.angle += ball2Adjustment / stringLength;
 
-        if (this.initialSpiral) {
-            this.angle += 0.05 * this.spiralSpeed * speedMultiplier;
-            this.distance += 0.5 * this.spiralSpeed * speedMultiplier;
-            const newX = canvas.width / 2 + this.distance * Math.cos(this.angle);
-            const newY = canvas.height / 2 + this.distance * Math.sin(this.angle);
-            this.dx = (newX - this.x) / 2; // Adjust to maintain trajectory speed
-            this.dy = (newY - this.y) / 2; // Adjust to maintain trajectory speed
-            this.x = newX;
-            this.y = newY;
-
-            if (currentTime - this.startTime >= this.delay + this.spiralDuration) {
-                this.initialSpiral = false;
-            }
-        } else {
-            this.x += this.dx * speedMultiplier;
-            this.y += this.dy * speedMultiplier;
-
-            // Check for collision with walls
-            if (this.x + this.radius > canvas.width || this.x - this.radius < 0) {
-                this.dx = -this.dx;
-            }
-            if (this.y + this.radius > canvas.height || this.y - this.radius < 0) {
-                this.dy = -this.dy;
-            }
-
-            // Check for collision with other balls
-            for (let i = 0; i < balls.length; i++) {
-                if (this === balls[i]) continue;
-
-                const dx = this.x - balls[i].x;
-                const dy = this.y - balls[i].y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < this.radius + balls[i].radius) {
-                    // Resolve overlap
-                    const overlap = (this.radius + balls[i].radius) - distance;
-                    const smallerBall = this.radius < balls[i].radius ? this : balls[i];
-                    const largerBall = this.radius < balls[i].radius ? balls[i] : this;
-
-                    smallerBall.x -= overlap * (dx / distance) * 0.5;
-                    smallerBall.y -= overlap * (dy / distance) * 0.5;
-                    largerBall.x += overlap * (dx / distance) * 0.5;
-                    largerBall.y += overlap * (dy / distance) * 0.5;
-
-                    // Calculate angle of collision
-                    const angle = Math.atan2(dy, dx);
-                    const sin = Math.sin(angle);
-                    const cos = Math.cos(angle);
-
-                    // Rotate ball velocities to collision axis
-                    const v1 = rotate(this.dx, this.dy, sin, cos, true);
-                    const v2 = rotate(balls[i].dx, balls[i].dy, sin, cos, true);
-
-                    // Perform 1D collision response
-                    const v1Final = collisionResponse(v1, v2, this.radius, balls[i].radius);
-                    const v2Final = collisionResponse(v2, v1, balls[i].radius, this.radius);
-
-                    // Rotate velocities back to original axis
-                    const v1New = rotate(v1Final[0], v1Final[1], sin, cos, false);
-                    const v2New = rotate(v2Final[0], v2Final[1], sin, cos, false);
-
-                    // Update velocities
-                    this.dx = v1New[0];
-                    this.dy = v1New[1];
-                    balls[i].dx = v2New[0];
-                    balls[i].dy = v2New[1];
-                }
+                const newVel1 = (ball1.angularVelocity * (ball1.mass - ball2.mass) + 2 * ball2.mass * ball2.angularVelocity) / totalMass;
+                const newVel2 = (ball2.angularVelocity * (ball2.mass - ball1.mass) + 2 * ball1.mass * ball1.angularVelocity) / totalMass;
+                ball1.angularVelocity = newVel1;
+                ball2.angularVelocity = newVel2;
             }
         }
-
-        this.draw();
     }
 }
 
-function rotate(dx, dy, sin, cos, reverse) {
-    return reverse
-        ? [dx * cos + dy * sin, dy * cos - dx * sin]
-        : [dx * cos - dy * sin, dy * cos + dx * sin];
-}
-
-function collisionResponse(v1, v2, r1, r2) {
-    const u1 = v1[0];
-    const u2 = v2[0];
-    const v1Final = (u1 * (r1 - r2) + 2 * r2 * u2) / (r1 + r2);
-    return [v1Final, v1[1]]; // Only return the x component for 1D collision
-}
-
-function addBallWithDelay(index) {
-    const delay = index * 500; // 500 milliseconds delay between each ball
-    const radius = 20;
-    let x = canvas.width / 2;
-    let y = canvas.height / 2;
-
-    balls.push(new Ball(x, y, radius, allColor, delay));
-}
-
-function removeBall() {
-    if (balls.length > 0) {
-        balls.pop();
-    }
-}
-
-function increaseSpeed() {
-    speedMultiplier += 0.1;
-}
-
-function decreaseSpeed() {
-    speedMultiplier = Math.max(0.1, speedMultiplier - 0.1);
-}
-
-document.getElementById('addBall').addEventListener('click', () => addBallWithDelay(balls.length));
-document.getElementById('removeBall').addEventListener('click', removeBall);
-document.getElementById('increaseSpeed').addEventListener('click', increaseSpeed);
-document.getElementById('decreaseSpeed').addEventListener('click', decreaseSpeed);
-
-function init() {
-    balls = [];
-    for (let i = 0; i < ballCount; i++) {
-        addBallWithDelay(i);
-    }
-}
+let lastTime = 0;
+let animationId = null;
 
 function animate(currentTime) {
-    requestAnimationFrame(animate);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    time += 0.01;
-    balls.forEach(ball => ball.update(currentTime));
+    const dt = (currentTime - lastTime) / 1000;
+    lastTime = currentTime;
+    update(dt);
+    draw();
+    animationId = requestAnimationFrame(animate);
 }
+
+canvas.addEventListener('mousedown', (event) => {
+    const mouseX = event.clientX;
+    const mouseY = event.clientY;
+    balls.forEach(ball => {
+        const ballX = ball.x + Math.sin(ball.angle) * stringLength;
+        const ballY = ball.y + Math.cos(ball.angle) * stringLength;
+        const dx = mouseX - ballX;
+        const dy = mouseY - ballY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance < ball.radius) {
+            draggedBall = ball;
+            dragStartAngle = ball.angle;
+        }
+    });
+});
+
+canvas.addEventListener('mousemove', (event) => {
+    if (!draggedBall) return;
+    const dx = event.clientX - draggedBall.x;
+    const dy = event.clientY - draggedBall.y;
+    let newAngle = Math.atan2(dx, dy);
+    // Limit angle to 170 degrees
+    const maxAngle = 170 * (Math.PI / 180);
+    newAngle = Math.min(Math.max(newAngle, -maxAngle), maxAngle);
+    draggedBall.angle = newAngle;
+
+    handleCollisions(); // Check for collisions while dragging
+
+    draw();
+});
+
+canvas.addEventListener('mouseup', () => {
+    draggedBall = null;
+});
+
+colors.addEventListener("click", () => {
+    allColor = getRandomColor();
+    draw();
+});
+
+playButton.addEventListener("click", () => {
+    isPlaying = !isPlaying;
+    playButton.textContent = isPlaying ? "Pause" : "Play";
+    if (isPlaying && !animationId) {
+        lastTime = performance.now();
+        animate(lastTime);
+    }
+    message.style.display = "none";
+});
+
+increaseBallButton.addEventListener("click", () => {
+    const topY = 120;
+    balls.push(createBall(canvas.width / 2, topY, radius));
+    resetBalls();
+});
+
+decreaseBallButton.addEventListener("click", () => {
+    if (balls.length > 0) {
+        balls.pop();
+        resetBalls();
+    }
+});
+
+increaseStringButton.addEventListener("click", () => {
+    stringLength += 10;
+    draw();
+});
+
+decreaseStringButton.addEventListener("click", () => {
+    stringLength = Math.max(50, stringLength - 10);
+    draw();
+});
+
+increaseGravityButton.addEventListener("click", () => {
+    gravity += 100;
+});
+
+decreaseGravityButton.addEventListener("click", () => {
+    gravity = Math.max(0, gravity - 100);
+});
+
+resetButton.addEventListener("click", () => {
+    resetBalls();
+    message.style.display = "block";
+    isPlaying = false;
+    playButton.textContent = "Play";
+    if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+    }
+});
 
 function getRandomColor() {
     const r = Math.floor(Math.random() * 256);
     const g = Math.floor(Math.random() * 256);
     const b = Math.floor(Math.random() * 256);
-    const color = '#' + r.toString(16).padStart(2, '0') + g.toString(16).padStart(2, '0') + b.toString(16).padStart(2, '0');
-    return color;
+    return `rgb(${r},${g},${b})`;
 }
 
-colors.addEventListener("click", () => {
-    let col = getRandomColor();
-    for (let ball of balls) {
-        ball.color = col;
+function initialize() {
+    const topY = 120;
+    for (let i = 0; i < 5; i++) {
+        balls.push(createBall(canvas.width / 2, topY, radius));
     }
-    allColor = col;
+    resetBalls();
+    animate(performance.now());
+}
+
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        isPlaying = false;
+        playButton.textContent = "Play";
+    } else {
+        isPlaying = true;
+        playButton.textContent = "Pause";
+        lastTime = performance.now();
+        animate(lastTime);
+    }
 });
 
-init();
-animate();
+initialize();document.querySelectorAll('.fullscreen-button').forEach(button => {
+    button.addEventListener('click', (e) => {
+        const column = e.target.closest('.column');
+        if (column.id === 'technical-projects' || column.id === 'investment-blog') {
+            column.classList.add('expanded');
+            column.querySelector('.fullscreen-button').style.display = 'none';
+            column.querySelector('.minimize-button').style.display = 'block';
+            document.body.classList.add('expanded-column');
+            document.querySelectorAll('.column').forEach(col => {
+                if (col !== column) {
+                    col.style.display = 'none';
+                }
+            });
+            document.querySelector('.name-box').style.zIndex = '0';
+            document.querySelector('.controls').style.zIndex = '0';
+        }
+    });
+});
+
+document.querySelectorAll('.minimize-button').forEach(button => {
+    button.addEventListener('click', (e) => {
+        const column = e.target.closest('.column');
+        column.classList.remove('expanded');
+        column.querySelector('.fullscreen-button').style.display = 'block';
+        column.querySelector('.minimize-button').style.display = 'none';
+        document.body.classList.remove('expanded-column');
+        document.querySelectorAll('.column').forEach(col => {
+            col.style.display = 'block';
+        });
+        document.querySelector('.name-box').style.zIndex = '10';
+        document.querySelector('.controls').style.zIndex = '10';
+    });
+});
+
+
+
+
+function updateMessagePosition() {
+    const controls = document.querySelector('.controls');
+    const message = document.getElementById('message');
+    if (controls && message) {
+        const controlsRect = controls.getBoundingClientRect();
+        message.style.width = `${controlsRect.width}px`;
+    }
+}
+
+window.addEventListener('resize', updateMessagePosition);
+updateMessagePosition(); // Initial call to set the position
+
+
+resizeCanvas();

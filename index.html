@@ -10,38 +10,105 @@
 <body>
     <canvas id="canvas"></canvas>
     <div class="name-box">
-        <div class="name">AJ Caesar</div>
+        <div class="name">Albert (AJ) Caesar</div>
         <div class="links">
-            <a href="https://www.linkedin.com/in/aj-caesar/" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a> 
-            <a href="https://github.com/ajcaesar" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+            <a href="https://www.linkedin.com/in/aj-caesar/" target="_blank"><i class="fab fa-linkedin"></i></a>
+            <a href="https://github.com/ajcaesar" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="mailto:ac2017@princeton.edu" target="_blank"><i class="fas fa-envelope"></i></a>            
         </div>
+    </div>
+    <div class="c1">
+    <div class="controls">
+        <div class="control-column">
+            <div class="control-group">
+                <button id="decreaseBallButton">-</button>
+                <span>Spheres</span>
+                <button id="increaseBallButton">+</button>
+            </div>
+            <div class="control-group">
+                <button id="decreaseStringButton">-</button>
+                <span>Length</span>
+                <button id="increaseStringButton">+</button>
+            </div>
+            <div class="control-group">
+                <button id="decreaseGravityButton">-</button>
+                <span>Gravity</span>
+                <button id="increaseGravityButton">+</button>
+            </div>
+        </div>
+        <div class="control-column">
+            <button id="resetButton">Reset</button>
+            <button id="playButton">Pause</button>
+            <button id="colors">Colors</button>
+        </div>
+    </div>
+        <div id="message" class="hiddenMessage">Drag the spheres into any formation you want and press play</div>
     </div>
     <div class="content">
-        <div class="column">
+        <div class="column" id="technical-projects">
             <h2>Technical Projects</h2>
-            <div id="technical-projects">
-                <!-- Add your technical projects here -->
+            <button class="fullscreen-button"><i class="fas fa-expand"></i></button>
+            <button class="minimize-button" style="display: none;"><i class="fas fa-compress"></i></button>
+            <div class="projects-container">
+            <div class="project">
+                <h3>JobTracker Chrome Extension</h3>
+                <div class="video-wrapper">
+                <video controls>
+                    <source src="./vids_100mb/JobTrackerJuly21_100mb.mov" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                </div>
+                <details>
+                    <summary>Details</summary>
+                    <p> Scrapes with Selenium and automatically fills in fields using
+                        gen ai (perplexity) to speed up the process of saving job applications
+                        to a spreadsheet</p>
+                  </details>
+                <p><a href="https://github.com/ajcaesar/ChromeExtensions" target="_blank">View on GitHub</a></p>
+                <p><a href="https://drive.google.com/file/d/1l15FtnMQ0Y3eCWHKLnlvsqynOFuPpL-H/view?usp=sharing" target="_blank">Full video</a> (shortened to 100mb above)</p>
+            </div>
+            <div class="project">
+                <h3>Claw Machine Replica</h3>
+                <div class="video-wrapper">
+                <video controls>
+                    <source src="./vids_100mb/Claw_Machine_Vid_100mb.mov" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                </div>
+                <details>
+                <summary>Details</summary>
+                <p>My favorite childhood build. Modeled after an arcade-style claw machine designed from scratch using servos, metal rods for the gantry,
+                    and scrapwood. Controlled via arduino & joystick. 4 servos in total, one opens claw, one raises/lowers claw
+                    and two control a rubber belt which designates the xy position of the claw. Working on modifying it 
+                    with rpi and cv to automatically spot and grasp objects. </p>
+              </details>
+                <p><a href="https://github.com/ajcaesar/arcade_claw_machine" target="_blank">View on GitHub</a></p>
+                <p><a href="https://drive.google.com/file/d/1gjDqkd60lUHCoaAW5ik1AIPpR-MrDf_b/view?usp=sharing" target="_blank">Full video</a> (shortened to 100mb above)</p>
+            </div>
             </div>
         </div>
-        <div class="column">
-            <h2>Investment Ideas</h2>
-            <div id="investment-ideas">
-                <!-- Add your investment ideas here -->
-            </div>
+        <div class="column" id="investment-blog">
+            <h2>Investments Blog</h2>
+            <p>Equities I have pitched/purchased and my rational behind them</p>
+            <button class="fullscreen-button"><i class="fas fa-expand"></i></button>
+            <button class="minimize-button" style="display: none;"><i class="fas fa-compress"></i></button>
+            <div class="projects-container">
+                <div class="project">
+                    <img src="./pitches_info/bkng/BKNG_LOGO.png">
+                    <h3>Booking Holdings ($BKNG)</h3>
+                    <p>Date Purchased: 4/8/2024</p>
+                    <p>Current Price: <span id="bkng-price"></span></p>
+                    <details>
+                        <summary>Rationale</summary>
+                        <p> Scrapes with Selenium and automatically fills in fields using
+                            gen ai (perplexity) to speed up the process of saving job applications
+                            to a spreadsheet</p>
+                      </details>
+                    <p><a href="https://github.com/ajcaesar/ChromeExtensions" target="_blank">View on GitHub</a></p>
+                    <p><a href="https://drive.google.com/file/d/1l15FtnMQ0Y3eCWHKLnlvsqynOFuPpL-H/view?usp=sharing" target="_blank">Full video</a> (shortened to 100mb above)</p>
+                </div>
+                </div>
         </div>
-    </div>
-    <div class="controls">
-        <div class="control-group">
-            <button id="addBall" class="control-button">+</button>
-            <span>balls</span>
-            <button id="removeBall" class="control-button">-</button>
-        </div>
-        <div class="control-group">
-            <button id="increaseSpeed" class="control-button">+</button>
-            <span>speed</span>
-            <button id="decreaseSpeed" class="control-button">-</button>
-        </div>
-        <button id="colors">Change Colors</button>
     </div>
     <script src="script.js"></script>
 </body>
