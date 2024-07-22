@@ -359,7 +359,6 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.text())
         .then(text => {
             const pElement = document.getElementById('bkng-text');
-            pElement.innerHTML = text.replace(/\n/g, '<br>');
         })
         .catch(error => console.error('Error fetching the text file:', error));
 });
