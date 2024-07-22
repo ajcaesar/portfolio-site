@@ -69,7 +69,7 @@ function draw() {
         ctx.arc(ballX, ballY, ball.radius, 0, Math.PI * 2);
         ctx.fillStyle = gradient;
         ctx.fill();
-        ctx.stroke();
+        // ctx.stroke();
     });
     updateContentPosition();
 }
