@@ -395,3 +395,7 @@ h3.stock-name{
 #bkng-price, #bkng-return {
     box-shadow: none;
 }
+
+span #bkng-price, span #bkng-return {
+    margin-left: 0px;
+}
