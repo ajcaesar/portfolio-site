@@ -399,3 +399,7 @@ h3.stock-name{
 span #bkng-price, span #bkng-return {
     margin-left: 0px;
 }
+
+#bkng-text {
+    white-space: pre-wrap; /* Preserves whitespace and newlines */
+}

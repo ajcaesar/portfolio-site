@@ -353,3 +353,13 @@ async function fetchStockPrice() {
         return null;
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('https://raw.githubusercontent.com/ajcaesar/portfolio-site/main/pitches_info/bkng/BKNG.txt')
+        .then(response => response.text())
+        .then(text => {
+            const pElement = document.getElementById('bkng-text');
+            pElement.innerHTML = text.replace(/\n/g, '<br>');
+        })
+        .catch(error => console.error('Error fetching the text file:', error));
+});
