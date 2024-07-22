@@ -1,9 +1,8 @@
 const fetch = require('node-fetch');
 
 module.exports = async (req, res) => {
-    const apiKey = process.env.FINNHUB_API_KEY;
     const symbol = 'BKNG';
-    const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${apiKey}`;
+    const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=cqesi1pr01qm14qb52c0cqesi1pr01qm14qb52cg`;
     
     try {
         const response = await fetch(url);
