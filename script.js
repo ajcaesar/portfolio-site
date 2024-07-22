@@ -312,7 +312,7 @@ resizeCanvas();
 
 async function fetchStockPrice() {
     try {
-        const response = await fetch('/api/getStockPrice');
+        const response = await fetch('./api/getStockPrice');
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -327,7 +327,7 @@ const previousPrice = 3601;
 async function updateStockPrice() {
     const currentPrice = await fetchStockPrice();
     if (currentPrice !== null) {
-        document.getElementById('bkng-price').textContent = `$${currentPrice.toFixed(2)}`;
+        document.getElementById('bkng-price').textContent = currentPrice.toFixed(2);
         const returnPercentage = ((currentPrice - previousPrice) / previousPrice) * 100;
         const returnElement = document.getElementById('bkng-return');
         returnElement.textContent = ` (${returnPercentage.toFixed(2)}%)`;
@@ -342,7 +342,7 @@ async function updateStockPrice() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    updateStockPrice();
-    setInterval(updateStockPrice, 60000); // Update every 60 seconds
-});
+// document.addEventListener('DOMContentLoaded', () => {
+//     updateStockPrice();
+//     setInterval(updateStockPrice, 60000); // Update every 60 seconds
+// });
