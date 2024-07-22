@@ -3,7 +3,7 @@ const fetch = require('node-fetch');
 module.exports = async (req, res) => {
     const symbol = 'BKNG';
     const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=cqesi1pr01qm14qb52c0cqesi1pr01qm14qb52cg`;
-    
+    console.log("fetching stock price url");
     try {
         const response = await fetch(url);
         if (!response.ok) {
