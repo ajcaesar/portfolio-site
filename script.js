@@ -258,11 +258,10 @@ document.addEventListener("visibilitychange", () => {
     }
 });
 
-initialize();
-document.querySelectorAll('.fullscreen-button').forEach(button => {
+initialize();document.querySelectorAll('.fullscreen-button').forEach(button => {
     button.addEventListener('click', (e) => {
         const column = e.target.closest('.column');
-        if (column.id === 'technical-projects') {
+        if (column.id === 'technical-projects' || column.id === 'investment-blog') {
             column.classList.add('expanded');
             column.querySelector('.fullscreen-button').style.display = 'none';
             column.querySelector('.minimize-button').style.display = 'block';
@@ -292,6 +291,7 @@ document.querySelectorAll('.minimize-button').forEach(button => {
         document.querySelector('.controls').style.zIndex = '10';
     });
 });
+
 
 
 
