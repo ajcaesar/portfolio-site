@@ -309,3 +309,40 @@ updateMessagePosition(); // Initial call to set the position
 
 
 resizeCanvas();
+
+async function fetchStockPrice() {
+    try {
+        const response = await fetch('/api/getStockPrice');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data.c; // Current price
+    } catch (error) {
+        console.error('Error fetching stock price:', error);
+        return null;
+    }
+}
+const previousPrice = 3601;
+async function updateStockPrice() {
+    const currentPrice = await fetchStockPrice();
+    if (currentPrice !== null) {
+        document.getElementById('bkng-price').textContent = `$${currentPrice.toFixed(2)}`;
+        const returnPercentage = ((currentPrice - previousPrice) / previousPrice) * 100;
+        const returnElement = document.getElementById('bkng-return');
+        returnElement.textContent = ` (${returnPercentage.toFixed(2)}%)`;
+
+        if (returnPercentage >= 0) {
+            returnElement.style.color = 'green';
+        } else {
+            returnElement.style.color = 'red';
+        }
+    } else {
+        document.getElementById('bkng-price').textContent = 'Error';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    updateStockPrice();
+    setInterval(updateStockPrice, 60000); // Update every 60 seconds
+});

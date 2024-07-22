@@ -341,3 +341,57 @@ button:hover {
 details {
     margin-top: 10px;
 }
+
+.stock-summary {
+    width: 100%;
+}
+
+.summary-details {
+    display: flex;
+    justify-content: space-between;
+    gap: 5%;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 5px;
+}
+
+.stock-review {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stock-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.summary-details{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.summary-details span, .current-price span {
+    border-radius: 5px;
+    padding: 5px 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 1);
+    flex: 1 1 40%;
+    box-sizing: border-box; /* Ensures padding and border are included in the width */
+    min-width: 200px;
+}
+
+h3.stock-name{
+    margin-bottom: 0px;
+    margin-block-end: 0px;
+}
+
+#bkng-price, #bkng-return {
+    box-shadow: none;
+}

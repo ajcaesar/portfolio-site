@@ -93,21 +93,29 @@
             <button class="fullscreen-button"><i class="fas fa-expand"></i></button>
             <button class="minimize-button" style="display: none;"><i class="fas fa-compress"></i></button>
             <div class="projects-container">
-                <div class="project">
-                    <img src="./pitches_info/bkng/BKNG_LOGO.png">
-                    <h3>Booking Holdings ($BKNG)</h3>
-                    <p>Date Purchased: 4/8/2024</p>
-                    <p>Current Price: <span id="bkng-price"></span></p>
-                    <details>
+                <div class="project stock-review">
+                    <img src="./pitches_info/bkng/BKNG_LOGO.png" class="stock-logo">
+                    <div class="stock-details">
+                        <h3 class="stock-name">Booking Holdings ($BKNG)</h3>
+                        <p class="summary-details">
+                            <span>April 2024</span>
+                            <span>Purchase Price: $3601</span>
+                            <span class="current-price">
+                                Current Price: <span id="bkng-price"></span>
+                            </span>
+                            <span>Return:<span id="bkng-return"></span></span>
+                        </p>
+                    </div>
+                    <details class="stock-rationale">
                         <summary>Rationale</summary>
-                        <p> Scrapes with Selenium and automatically fills in fields using
-                            gen ai (perplexity) to speed up the process of saving job applications
-                            to a spreadsheet</p>
-                      </details>
-                    <p><a href="https://github.com/ajcaesar/ChromeExtensions" target="_blank">View on GitHub</a></p>
-                    <p><a href="https://drive.google.com/file/d/1l15FtnMQ0Y3eCWHKLnlvsqynOFuPpL-H/view?usp=sharing" target="_blank">Full video</a> (shortened to 100mb above)</p>
+                        <p>...</p>
+                        <img class="stock-summary" src="./pitches_info/bkng/BKNG-Summary.png" alt="excel writeup showing 15.1% irr">
+                    </details>
+                    <p class="pdf-writeup">
+                        <a href="./pitches_info/bkng/BKNG_Writeup.pdf" download>PDF Writeup</a>
+                    </p>
                 </div>
-                </div>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>
