@@ -310,22 +310,13 @@ updateMessagePosition(); // Initial call to set the position
 
 resizeCanvas();
 
+document.addEventListener('DOMContentLoaded', () => {
+    updateStockPrice();
+    setInterval(updateStockPrice, 60000); // Update every 60 seconds
+});
 
-
-async function fetchStockPrice() {
-    try {
-        const response = await fetch('./api/getStockPrice');
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        return data.c; // Current price
-    } catch (error) {
-        console.error('Error fetching stock price:', error);
-        return null;
-    }
-}
 const previousPrice = 3601;
+
 async function updateStockPrice() {
     const currentPrice = await fetchStockPrice();
 
@@ -345,7 +336,19 @@ async function updateStockPrice() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    updateStockPrice();
-    setInterval(updateStockPrice, 60000); // Update every 60 seconds
-});
+async function fetchStockPrice() {
+    const symbol = 'BKNG';
+    const token = 'cqesi1pr01qm14qb52c0cqesi1pr01qm14qb52cg'; // Your API token
+    const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${token}`;
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data.c; // Current price
+    } catch (error) {
+        console.error('Error fetching stock price:', error);
+        return null;
+    }
+}
