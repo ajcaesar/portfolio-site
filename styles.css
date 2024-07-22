@@ -397,7 +397,7 @@ h3.stock-name{
 }
 
 span #bkng-price, span #bkng-return {
-    margin-left: 0px;
+    margin-left: -5px;
 }
 
 #bkng-text {
