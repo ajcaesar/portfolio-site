@@ -413,3 +413,7 @@ span #bkng-price, span #bkng-return {
     border-radius: 10px;
     margin-bottom: 10px;
 }
+
+.stock-name {
+    margin-bottom: 10px;
+}
