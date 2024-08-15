@@ -399,3 +399,10 @@ h3.stock-name{
 span #bkng-price, span #bkng-return {
     margin-left: -5px;
 }
+
+.project-image {
+    width: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
