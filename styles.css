@@ -77,6 +77,10 @@ canvas {
     transition: z-index 0.3s ease;
 }
 
+img {
+    width: auto;
+}
+
 
 .control-column {
     display: flex;
@@ -271,6 +275,7 @@ button:hover {
     font-size: 20px;
     color: #1a1a1a; /* Darker text for the title */
     margin-bottom: 10px;
+    margin-top: 0px;
 }
 
 .project p a {
