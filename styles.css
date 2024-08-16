@@ -412,8 +412,14 @@ span #bkng-price, span #bkng-return {
     object-fit: cover;
     border-radius: 10px;
     margin-bottom: 10px;
+    margin-top: 0px;
 }
 
 .stock-name {
     margin-bottom: 10px;
+}
+
+img {
+    margin-top: 5px;
+    border-radius: 10px;
 }
