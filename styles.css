@@ -421,5 +421,33 @@ span #bkng-price, span #bkng-return {
 
 img {
     margin-top: 5px;
-    border-radius: 10px;
+}
+
+/* Additional Styles for Enhanced Box Shadows and Interactivity */
+
+.name-box {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Increased shadow for more depth */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+}
+
+.name-box:hover {
+    background-color: #2980b9;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Deeper shadow on hover */
+}
+
+.c1 {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* More pronounced shadow */
+}
+
+.column {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* More depth to columns */
+}
+
+
+#message {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for message */
+}
+
+.project {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Increased shadow for project cards */
 }
