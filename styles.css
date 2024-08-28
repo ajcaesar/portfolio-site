@@ -421,6 +421,7 @@ span #bkng-price, span #bkng-return {
 
 img {
     margin-top: 5px;
+    border-radius: 0px;
 }
 
 /* Additional Styles for Enhanced Box Shadows and Interactivity */
