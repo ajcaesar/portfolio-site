@@ -452,3 +452,7 @@ img {
 .project {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Increased shadow for project cards */
 }
+.project {
+    /* existing styles */
+    max-width: 100%;
+}
