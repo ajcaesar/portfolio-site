@@ -17,7 +17,7 @@ function resizeCanvas() {
     resetBalls(); // Ensure balls are repositioned when the canvas is resized
 }
 
-window.addEventListener('resize', resizeCanvas);
+// window.addEventListener('resize', resizeCanvas);
 
 function resetBalls() {
     if (balls.length === 0) return; // Ensure there are balls to reset
@@ -138,144 +138,144 @@ function animate(currentTime) {
     animationId = requestAnimationFrame(animate);
 }
 
-canvas.addEventListener('mousedown', (event) => {
-    const mouseX = event.clientX;
-    const mouseY = event.clientY;
-    balls.forEach(ball => {
-        const ballX = ball.x + Math.sin(ball.angle) * stringLength;
-        const ballY = ball.y + Math.cos(ball.angle) * stringLength;
-        const dx = mouseX - ballX;
-        const dy = mouseY - ballY;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance < ball.radius) {
-            draggedBall = ball;
-            dragStartAngle = ball.angle;
-        }
-    });
-});
+// canvas.addEventListener('mousedown', (event) => {
+//     const mouseX = event.clientX;
+//     const mouseY = event.clientY;
+//     balls.forEach(ball => {
+//         const ballX = ball.x + Math.sin(ball.angle) * stringLength;
+//         const ballY = ball.y + Math.cos(ball.angle) * stringLength;
+//         const dx = mouseX - ballX;
+//         const dy = mouseY - ballY;
+//         const distance = Math.sqrt(dx * dx + dy * dy);
+//         if (distance < ball.radius) {
+//             draggedBall = ball;
+//             dragStartAngle = ball.angle;
+//         }
+//     });
+// });
 
-canvas.addEventListener('mousemove', (event) => {
-    if (!draggedBall) return;
-    const dx = event.clientX - draggedBall.x;
-    const dy = event.clientY - draggedBall.y;
-    let newAngle = Math.atan2(dx, dy);
-    // Limit angle to 170 degrees
-    const maxAngle = 170 * (Math.PI / 180);
-    newAngle = Math.min(Math.max(newAngle, -maxAngle), maxAngle);
-    draggedBall.angle = newAngle;
+// canvas.addEventListener('mousemove', (event) => {
+//     if (!draggedBall) return;
+//     const dx = event.clientX - draggedBall.x;
+//     const dy = event.clientY - draggedBall.y;
+//     let newAngle = Math.atan2(dx, dy);
+//     // Limit angle to 170 degrees
+//     const maxAngle = 170 * (Math.PI / 180);
+//     newAngle = Math.min(Math.max(newAngle, -maxAngle), maxAngle);
+//     draggedBall.angle = newAngle;
 
-    handleCollisions(); // Check for collisions while dragging
+//     handleCollisions(); // Check for collisions while dragging
 
-    draw();
-});
+//     draw();
+// });
 
-canvas.addEventListener('mouseup', () => {
-    draggedBall = null;
-});
+// canvas.addEventListener('mouseup', () => {
+//     draggedBall = null;
+// });
 
-colors.addEventListener("click", () => {
-    allColor = getRandomColor();
-    draw();
-});
+// colors.addEventListener("click", () => {
+//     allColor = getRandomColor();
+//     draw();
+// });
 
-playButton.addEventListener("click", () => {
-    isPlaying = !isPlaying;
-    playButton.textContent = isPlaying ? "Pause" : "Play";
-    if (isPlaying && !animationId) {
-        lastTime = performance.now();
-        animate(lastTime);
-    }
-    message.style.display = "none";
-});
+// playButton.addEventListener("click", () => {
+//     isPlaying = !isPlaying;
+//     playButton.textContent = isPlaying ? "Pause" : "Play";
+//     if (isPlaying && !animationId) {
+//         lastTime = performance.now();
+//         animate(lastTime);
+//     }
+//     message.style.display = "none";
+// });
 
-increaseBallButton.addEventListener("click", () => {
-    const topY = 120;
-    balls.push(createBall(canvas.width / 2, topY, radius));
-    resetBalls();
-});
+// increaseBallButton.addEventListener("click", () => {
+//     const topY = 120;
+//     balls.push(createBall(canvas.width / 2, topY, radius));
+//     resetBalls();
+// });
 
-decreaseBallButton.addEventListener("click", () => {
-    if (balls.length > 0) {
-        balls.pop();
-        resetBalls();
-    }
-});
+// decreaseBallButton.addEventListener("click", () => {
+//     if (balls.length > 0) {
+//         balls.pop();
+//         resetBalls();
+//     }
+// });
 
-increaseStringButton.addEventListener("click", () => {
-    stringLength += 10;
-    draw();
-});
+// increaseStringButton.addEventListener("click", () => {
+//     stringLength += 10;
+//     draw();
+// });
 
-decreaseStringButton.addEventListener("click", () => {
-    stringLength = Math.max(50, stringLength - 10);
-    draw();
-});
+// decreaseStringButton.addEventListener("click", () => {
+//     stringLength = Math.max(50, stringLength - 10);
+//     draw();
+// });
 
-increaseGravityButton.addEventListener("click", () => {
-    gravity += 100;
-});
+// increaseGravityButton.addEventListener("click", () => {
+//     gravity += 100;
+// });
 
-decreaseGravityButton.addEventListener("click", () => {
-    gravity = Math.max(0, gravity - 100);
-});
+// decreaseGravityButton.addEventListener("click", () => {
+//     gravity = Math.max(0, gravity - 100);
+// });
 
-resetButton.addEventListener("click", () => {
-    resetBalls();
-    message.style.display = "block";
-    isPlaying = false;
-    playButton.textContent = "Play";
-    if (animationId) {
-        cancelAnimationFrame(animationId);
-        animationId = null;
-    }
-});
+// resetButton.addEventListener("click", () => {
+//     resetBalls();
+//     message.style.display = "block";
+//     isPlaying = false;
+//     playButton.textContent = "Play";
+//     if (animationId) {
+//         cancelAnimationFrame(animationId);
+//         animationId = null;
+//     }
+// });
 
-function getRandomColor() {
-    const r = Math.floor(Math.random() * 256);
-    const g = Math.floor(Math.random() * 256);
-    const b = Math.floor(Math.random() * 256);
-    return `rgb(${r},${g},${b})`;
-}
+// function getRandomColor() {
+//     const r = Math.floor(Math.random() * 256);
+//     const g = Math.floor(Math.random() * 256);
+//     const b = Math.floor(Math.random() * 256);
+//     return `rgb(${r},${g},${b})`;
+// }
 
-function initialize() {
-    const topY = 120;
-    for (let i = 0; i < 5; i++) {
-        balls.push(createBall(canvas.width / 2, topY, radius));
-    }
-    resetBalls();
-    animate(performance.now());
-}
+// function initialize() {
+//     const topY = 120;
+//     for (let i = 0; i < 5; i++) {
+//         balls.push(createBall(canvas.width / 2, topY, radius));
+//     }
+//     resetBalls();
+//     animate(performance.now());
+// }
 
-document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-        isPlaying = false;
-        playButton.textContent = "Play";
-    } else {
-        isPlaying = true;
-        playButton.textContent = "Pause";
-        lastTime = performance.now();
-        animate(lastTime);
-    }
-});
+// document.addEventListener("visibilitychange", () => {
+//     if (document.hidden) {
+//         isPlaying = false;
+//         playButton.textContent = "Play";
+//     } else {
+//         isPlaying = true;
+//         playButton.textContent = "Pause";
+//         lastTime = performance.now();
+//         animate(lastTime);
+//     }
+// });
 
-initialize();document.querySelectorAll('.fullscreen-button').forEach(button => {
-    button.addEventListener('click', (e) => {
-        const column = e.target.closest('.column');
-        if (column.id === 'technical-projects' || column.id === 'investment-blog') {
-            column.classList.add('expanded');
-            column.querySelector('.fullscreen-button').style.display = 'none';
-            column.querySelector('.minimize-button').style.display = 'block';
-            document.body.classList.add('expanded-column');
-            document.querySelectorAll('.column').forEach(col => {
-                if (col !== column) {
-                    col.style.display = 'none';
-                }
-            });
-            document.querySelector('.name-box').style.zIndex = '0';
-            document.querySelector('.controls').style.zIndex = '0';
-        }
-    });
-});
+// initialize();document.querySelectorAll('.fullscreen-button').forEach(button => {
+//     button.addEventListener('click', (e) => {
+//         const column = e.target.closest('.column');
+//         if (column.id === 'technical-projects' || column.id === 'investment-blog') {
+//             column.classList.add('expanded');
+//             column.querySelector('.fullscreen-button').style.display = 'none';
+//             column.querySelector('.minimize-button').style.display = 'block';
+//             document.body.classList.add('expanded-column');
+//             document.querySelectorAll('.column').forEach(col => {
+//                 if (col !== column) {
+//                     col.style.display = 'none';
+//                 }
+//             });
+//             document.querySelector('.name-box').style.zIndex = '0';
+//             document.querySelector('.controls').style.zIndex = '0';
+//         }
+//     });
+// });
 
 document.querySelectorAll('.minimize-button').forEach(button => {
     button.addEventListener('click', (e) => {
@@ -304,11 +304,11 @@ function updateMessagePosition() {
     }
 }
 
-window.addEventListener('resize', updateMessagePosition);
-updateMessagePosition(); // Initial call to set the position
+// window.addEventListener('resize', updateMessagePosition);
+// updateMessagePosition(); // Initial call to set the position
 
 
-resizeCanvas();
+// resizeCanvas();
 
 document.addEventListener('DOMContentLoaded', () => {
     updateStockPrice();
